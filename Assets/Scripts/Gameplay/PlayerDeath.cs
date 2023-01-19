@@ -28,8 +28,7 @@ namespace Platformer.Gameplay {
                 player.animator.SetBool("dead", true);
                 Simulation.Schedule<PlayerSpawn>(2);
 
-                // TODO: Need to update this
-                bool result = await ThirdWebManager.MintCoin("1");
+                bool result = await ThirdWebManager.GetCoin(player.Coins.ToString());
                 if (result) {
                     Debug.Log("Minted coin");
                 }

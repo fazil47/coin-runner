@@ -54,8 +54,8 @@ namespace Platformer.ThirdWeb {
             _instance.authPanelCanvas.SetActive(false);
         }
 
-        public static async Task<bool> MintCoin(string amount) {
-            TransactionResult result = await _instance._coinContract.ERC20.MintTo(ConnectedAddress, amount);
+        public static async Task<bool> GetCoin(string amount) {
+            TransactionResult result = await _instance._coinContract.ERC20.Claim(amount);
             return result.isSuccessful();
         }
 
