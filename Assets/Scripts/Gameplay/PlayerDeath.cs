@@ -3,22 +3,19 @@ using System.Collections.Generic;
 using Platformer.Core;
 using Platformer.Model;
 using UnityEngine;
+using Platformer.ThirdWeb;
 
-namespace Platformer.Gameplay
-{
+namespace Platformer.Gameplay {
     /// <summary>
     /// Fired when the player has died.
     /// </summary>
     /// <typeparam name="PlayerDeath"></typeparam>
-    public class PlayerDeath : Simulation.Event<PlayerDeath>
-    {
+    public class PlayerDeath : Simulation.Event<PlayerDeath> {
         PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
-        public override void Execute()
-        {
+        public override async void Execute() {
             var player = model.player;
-            if (player.health.IsAlive)
-            {
+            if (player.health.IsAlive) {
                 player.health.Die();
                 model.virtualCamera.m_Follow = null;
                 model.virtualCamera.m_LookAt = null;
@@ -30,6 +27,15 @@ namespace Platformer.Gameplay
                 player.animator.SetTrigger("hurt");
                 player.animator.SetBool("dead", true);
                 Simulation.Schedule<PlayerSpawn>(2);
+
+                // TODO: Need to update this
+                bool result = await ThirdWebManager.MintCoin("1");
+                if (result) {
+                    Debug.Log("Minted coin");
+                }
+                else {
+                    Debug.Log("Failed to mint coin");
+                }
             }
         }
     }

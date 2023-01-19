@@ -1219,6 +1219,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 084af8213d66c3d478aec1fba384d478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinContractAddress: 0x6DE5059a38394B63D2Fa4d7B095BAe7dB902fAC9
+  characterContractAddress: 0xCbB8Fe0933c74D7EDC4B19000F44278c41cF56Ad
   authPanelCanvas: {fileID: 318629458}
   authStatusText: {fileID: 1226316383}
   authButton: {fileID: 1904482925}
