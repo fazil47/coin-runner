@@ -99,7 +99,7 @@ namespace Platformer.ThirdWeb {
         }
         
         public static async Task<bool> GetCharacter() {
-            TransactionResult result = await _instance._coinContract.ERC1155.Claim("0",1);
+            TransactionResult result = await _instance._characterContract.ERC1155.Claim("0",1);
             return result.isSuccessful();
         }
 
@@ -116,7 +116,7 @@ namespace Platformer.ThirdWeb {
                 authStatusText.text = $"Connected as {address}";
                 _isAuthenticated = true;
                 _connectedAddress = address;
-                await GetCharacter();
+                // await GetCharacter();
             }
             catch (System.Exception e) {
                 authStatusText.text = $"Error: {e.Message}";
