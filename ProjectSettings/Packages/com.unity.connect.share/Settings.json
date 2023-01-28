@@ -6,7 +6,7 @@
             {
                 "type": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "buildOutputDirList",
-                "value": "{\"m_Value\":\"C:/Users/fazil/repos/my_repos/unity/rp3_platformer/Build;;;;;;;;;\"}"
+                "value": "{\"m_Value\":\"C:/Users/admin/OneDrive/Desktop/projects/Unity/rp3_platformer/build;C:/Users/fazil/repos/my_repos/unity/rp3_platformer/Build;;;;;;;;\"}"
             }
         ]
     }

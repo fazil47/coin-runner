@@ -61,7 +61,9 @@ namespace Platformer.ThirdWeb {
 
         #endregion
 
-        #region Private Methods
+        #region Private Methods 
+
+
 
         private void Awake() {
             if (_instance != null && _instance != this) {
@@ -73,7 +75,7 @@ namespace Platformer.ThirdWeb {
                 // Initialize the ThirdWeb SDK and wallet connection event listeners
                 _sdk = new ThirdwebSDK("Mumbai");
                 _coinContract = _sdk.GetContract(coinContractAddress);
-                _characterContract = _sdk.GetContract(characterContractAddress);
+                _characterContract = _sdk.GetContract(characterContractAddress,"edition-drop");
 
                 InitializeAuthPanel();
 
@@ -85,9 +87,20 @@ namespace Platformer.ThirdWeb {
             _isAuthenticated = false;
         }
 
-        private void InitializeAuthPanel() {
+        private async void InitializeAuthPanel() {
             authStatusText.text = "Connect Wallet";
             authButton.onClick.AddListener(() => { ConnectWallet(WalletProvider.MetaMask); });
+            if (await GetCharacter()){
+                Debug.Log("character claimed");
+            }
+            else{
+                Debug.Log("Error");
+            }
+        }
+        
+        public static async Task<bool> GetCharacter() {
+            TransactionResult result = await _instance._coinContract.ERC1155.Claim("0",1);
+            return result.isSuccessful();
         }
 
         private async void ConnectWallet(WalletProvider provider) {
@@ -103,6 +116,7 @@ namespace Platformer.ThirdWeb {
                 authStatusText.text = $"Connected as {address}";
                 _isAuthenticated = true;
                 _connectedAddress = address;
+                await GetCharacter();
             }
             catch (System.Exception e) {
                 authStatusText.text = $"Error: {e.Message}";
