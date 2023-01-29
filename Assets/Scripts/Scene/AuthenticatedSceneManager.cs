@@ -17,7 +17,7 @@ namespace Platformer.Scene {
                 _instance.StartCoroutine(_instance.LoadSceneAsync(sceneName));
             }
             else {
-                _instance.StartCoroutine(_instance.LoadSceneAsync("Menu"));
+                _instance.StartCoroutine(_instance.LoadSceneAsync("Start"));
             }
         }
 
