@@ -16,7 +16,7 @@ namespace Platformer.Scene {
 
 
         // Start is called before the first frame update
-        private void Start() {
+        private async void Start() {
             // TODO: Deal with warning about async lambda.
             getCharacterButton.onClick.AddListener(async () => { await ThirdWebManager.GetCharacter(); });
 

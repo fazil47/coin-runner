@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Platformer.Core;
 using Platformer.Mechanics;
 using Platformer.Model;
@@ -39,7 +40,7 @@ namespace Platformer.Gameplay {
             }
         }
 
-        private async void GetCoin(PlayerController player) {
+        private async Task GetCoin(PlayerController player) {
             bool result = await ThirdWebManager.GetCoin(player.Coins.ToString());
             if (result) {
                 Debug.Log("Minted coin");
