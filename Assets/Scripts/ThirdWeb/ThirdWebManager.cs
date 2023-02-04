@@ -79,6 +79,7 @@ namespace Platformer.ThirdWeb {
                 Destroy(this.gameObject);
             }
             else {
+#if !UNITY_EDITOR
                 _instance = this;
 
                 // Initialize the ThirdWeb SDK and wallet connection event listeners
@@ -92,12 +93,13 @@ namespace Platformer.ThirdWeb {
                 // Set GameObject and AuthPanel to not be destroyed on scene load
                 DontDestroyOnLoad(this.gameObject);
                 DontDestroyOnLoad(authPanelCanvas);
+#endif
             }
 
             _isAuthenticated = false;
         }
 
-        private async void InitializeAuthPanel() {
+        private void InitializeAuthPanel() {
             authStatusText.text = "Connect Wallet";
             authButton.onClick.AddListener(() => { ConnectWallet(WalletProvider.MetaMask); });
         }

@@ -15,14 +15,21 @@ namespace Platformer.Scene {
         [SerializeField] private Button playButton;
 
         private void Start() {
+#if UNITY_EDITOR
+            playButton.onClick.AddListener((() => { AuthenticatedSceneManager.LoadScene("CharacterSelect"); }));
+#else
             playButton.onClick.AddListener((() => {
                 if (ThirdWebManager.IsAuthenticated) {
                     AuthenticatedSceneManager.LoadScene("CharacterSelect");
                 }
             }));
+#endif
         }
 
         private void Update() {
+#if UNITY_EDITOR
+            startCanvas.SetActive(true);
+#else
             if (ThirdWebManager.IsAuthenticated) {
                 ThirdWebManager.HideAuthPanel();
                 startCanvas.SetActive(true);
@@ -30,6 +37,7 @@ namespace Platformer.Scene {
             else {
                 startCanvas.SetActive(false);
             }
+#endif
         }
     }
 }

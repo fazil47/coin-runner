@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Platformer.Core;
+using Platformer.Mechanics;
 using Platformer.Model;
 using UnityEngine;
 using Platformer.ThirdWeb;
@@ -14,7 +15,7 @@ namespace Platformer.Gameplay {
         PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
         public override async void Execute() {
-            var player = model.player;
+            PlayerController player = model.player;
             if (player.health.IsAlive) {
                 player.health.Die();
                 model.virtualCamera.m_Follow = null;
@@ -22,19 +23,29 @@ namespace Platformer.Gameplay {
                 // player.collider.enabled = false;
                 player.controlEnabled = false;
 
-                if (player.audioSource && player.ouchAudio)
+                if (player.audioSource && player.ouchAudio) {
                     player.audioSource.PlayOneShot(player.ouchAudio);
+                }
+
                 player.animator.SetTrigger("hurt");
                 player.animator.SetBool("dead", true);
                 Simulation.Schedule<PlayerSpawn>(2);
 
-                bool result = await ThirdWebManager.GetCoin(player.Coins.ToString());
-                if (result) {
-                    Debug.Log("Minted coin");
-                }
-                else {
-                    Debug.Log("Failed to mint coin");
-                }
+#if !UNITY_EDITOR
+                await GetCoin(player);
+#endif
+
+                player.ResetCoins();
+            }
+        }
+
+        private async void GetCoin(PlayerController player) {
+            bool result = await ThirdWebManager.GetCoin(player.Coins.ToString());
+            if (result) {
+                Debug.Log("Minted coin");
+            }
+            else {
+                Debug.Log("Failed to mint coin");
             }
         }
     }

@@ -5,6 +5,7 @@ using Platformer.Gameplay;
 using static Platformer.Core.Simulation;
 using Platformer.Model;
 using Platformer.Core;
+using TMPro;
 
 namespace Platformer.Mechanics {
     /// <summary>
@@ -51,16 +52,27 @@ namespace Platformer.Mechanics {
 
         public Bounds Bounds => collider2d.bounds;
 
+        [SerializeField] private TextMeshProUGUI coinCountText;
+
         public void IncrementCoins() {
             Coins++;
+            coinCountText.text = Coins.ToString();
         }
 
-        void Awake() {
+        public void ResetCoins() {
+            Coins = 0;
+            coinCountText.text = Coins.ToString();
+        }
+
+        private void Awake() {
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
             collider2d = GetComponent<Collider2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
+
+            // Initialize the coin count text.
+            coinCountText.text = Coins.ToString();
         }
 
         protected override void Update() {
