@@ -5,8 +5,11 @@
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
+
+# Adding builds to git for use with Netlify
 # /[Bb]uild/
-/[Bb]uilds/
+# /[Bb]uilds/
+
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
