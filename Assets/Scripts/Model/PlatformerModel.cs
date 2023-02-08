@@ -1,16 +1,15 @@
 using Platformer.Mechanics;
+using TMPro;
 using UnityEngine;
 
-namespace Platformer.Model
-{
+namespace Platformer.Model {
     /// <summary>
     /// The main model containing needed data to implement a platformer style 
     /// game. This class should only contain data, and methods that operate 
     /// on the data. It is initialised with data in the GameController class.
     /// </summary>
     [System.Serializable]
-    public class PlatformerModel
-    {
+    public class PlatformerModel {
         /// <summary>
         /// The virtual camera in the scene.
         /// </summary>
@@ -38,5 +37,19 @@ namespace Platformer.Model
         /// </summary>
         public float jumpDeceleration = 0.5f;
 
+        /// <summary>
+        /// The coins earned in a level.
+        /// </summary>
+        public int coinCount = 0;
+
+        /// <summary>
+        /// The post game UI for accepting the coins earned as ERC20 tokens.
+        /// </summary>
+        public GameObject postGameUI;
+
+        /// <summary>
+        /// The text component for displaying the coin count in the post game UI.
+        /// </summary>
+        public TextMeshProUGUI postGameCoinCount;
     }
 }

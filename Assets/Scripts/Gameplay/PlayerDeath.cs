@@ -30,23 +30,10 @@ namespace Platformer.Gameplay {
 
                 player.animator.SetTrigger("hurt");
                 player.animator.SetBool("dead", true);
-                Simulation.Schedule<PlayerSpawn>(2);
 
-#if !UNITY_EDITOR
-                await GetCoin(player);
-#endif
-
-                player.ResetCoins();
-            }
-        }
-
-        private async Task GetCoin(PlayerController player) {
-            bool result = await ThirdWebManager.GetCoin(player.Coins.ToString());
-            if (result) {
-                Debug.Log("Minted coin");
-            }
-            else {
-                Debug.Log("Failed to mint coin");
+                // TODO: Show death screen instead and spawn player after the player has claimed their coins
+                model.coinCount = player.Coins;
+                Simulation.Schedule<PostGame>(2);
             }
         }
     }
