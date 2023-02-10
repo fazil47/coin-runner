@@ -18,7 +18,12 @@ namespace Platformer.Scene {
         // Start is called before the first frame update
         private async void Start() {
             // TODO: Deal with warning about async lambda.
-            getCharacterButton.onClick.AddListener(async () => { await ThirdWebManager.GetCharacter(); });
+            getCharacterButton.onClick.AddListener(async () => {
+                bool ownsCharacter = await ThirdWebManager.GetCharacter();
+                if (ownsCharacter) {
+                    getCharacterPanel.SetActive(false);
+                }
+            });
 
 #if !UNITY_EDITOR
             if (await ThirdWebManager.IsCharacterOwner()) {

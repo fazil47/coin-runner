@@ -118,17 +118,17 @@ namespace Platformer.ThirdWeb {
                 _isAuthenticated = true;
                 _connectedAddress = address;
 
-                if (await IsCharacterOwner()) {
-                    Debug.Log("Already owns character");
-                }
-                else {
-                    if (await GetCharacter()) {
-                        Debug.Log("Got character");
-                    }
-                    else {
-                        Debug.Log("Error getting character");
-                    }
-                }
+                // if (await IsCharacterOwner()) {
+                //     Debug.Log("Already owns character");
+                // }
+                // else {
+                //     if (await GetCharacter()) {
+                //         Debug.Log("Got character");
+                //     }
+                //     else {
+                //         Debug.Log("Error getting character");
+                //     }
+                // }
             }
             catch (System.Exception e) {
                 authStatusText.text = $"Error: {e.Message}";
