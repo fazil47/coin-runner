@@ -1,6 +1,7 @@
 using Platformer.Core;
 using Platformer.Mechanics;
 using Platformer.Model;
+using Platformer.UI;
 using TMPro;
 using UnityEngine;
 
@@ -12,10 +13,11 @@ namespace Platformer.Gameplay {
         PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
         public override void Execute() {
-            GameObject postGameUI = model.postGameUI;
+            PostGameUIController postGameUI = model.postGameUI;
             TextMeshProUGUI postGameCoinCount = model.postGameCoinCount;
 
-            postGameUI.SetActive(true);
+            postGameUI.gameObject.SetActive(true);
+            postGameUI.RefreshUI();
             postGameCoinCount.text = model.coinCount.ToString();
         }
     }

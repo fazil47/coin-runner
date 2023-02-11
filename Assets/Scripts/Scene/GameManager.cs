@@ -17,10 +17,13 @@ namespace Platformer.Scene {
 
         private void Awake() {
             if (_instance != null && _instance != this) {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             }
             else {
                 _instance = this;
+
+                // Set GameObject to not be destroyed on scene load
+                DontDestroyOnLoad(gameObject);
             }
         }
     }

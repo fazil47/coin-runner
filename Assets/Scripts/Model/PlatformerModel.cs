@@ -1,4 +1,5 @@
 using Platformer.Mechanics;
+using Platformer.UI;
 using TMPro;
 using UnityEngine;
 
@@ -45,7 +46,7 @@ namespace Platformer.Model {
         /// <summary>
         /// The post game UI for accepting the coins earned as ERC20 tokens.
         /// </summary>
-        public GameObject postGameUI;
+        public PostGameUIController postGameUI;
 
         /// <summary>
         /// The text component for displaying the coin count in the post game UI.

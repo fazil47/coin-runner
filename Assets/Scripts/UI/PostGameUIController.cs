@@ -20,8 +20,18 @@ namespace Platformer.UI {
         [SerializeField] private Button replayButton;
         [SerializeField] private Button nextButton;
 
-        private void Start() {
+        public void RefreshUI() {
             InitializeUI();
+        }
+
+        private void Start() {
+            postGameUI.SetActive(false);
+
+            InitializeUI();
+
+            if (LevelManager.IsLastLevel) {
+                nextButton.gameObject.SetActive(false);
+            }
 
             claimCoinsButton.onClick.AddListener(async () => {
                 PlayerController player = Simulation.GetModel<PlatformerModel>().player;
@@ -55,23 +65,32 @@ namespace Platformer.UI {
             replayButton.onClick.AddListener(() => {
                 InitializeUI();
 
-                // TODO: Reload current level instead of just spawning the player
-                // or spawn the player and reset the level
-                Simulation.Schedule<PlayerSpawn>(2);
-                postGameUI.SetActive(false);
+                // Simulation.Schedule<PlayerSpawn>(2);
+                // postGameUI.SetActive(false);
+
+                LevelManager.ReloadLevel();
             });
 
             nextButton.onClick.AddListener(() => {
                 InitializeUI();
 
-                // TODO: Load next level
-                Simulation.Schedule<PlayerSpawn>(2);
-                postGameUI.SetActive(false);
+                if (!LevelManager.IsLastLevel) {
+                    LevelManager.LoadNextLevel();
+                }
             });
         }
 
         private void InitializeUI() {
-            postGameUI.SetActive(false);
+            PlayerController player = Simulation.GetModel<PlatformerModel>().player;
+            int coinCount = player.Coins;
+
+            if (coinCount > 0) {
+                claimCoinsButton.gameObject.SetActive(true);
+            }
+            else {
+                claimCoinsButton.gameObject.SetActive(false);
+            }
+
             claimCoinsUI.SetActive(true);
             progressUI.SetActive(false);
             successUI.SetActive(false);

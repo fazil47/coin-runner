@@ -10,13 +10,20 @@ namespace Platformer.UI {
         [SerializeField] private String levelName;
         [SerializeField] private String levelSceneName;
 
+        public void SetLevelName(string levelName) {
+            this.levelName = levelName;
+        }
+
+        public void SetLevelSceneName(string levelSceneName) {
+            this.levelSceneName = levelSceneName;
+        }
 
         private void Start() {
             var button = GetComponent<Button>();
             var buttonText = GetComponentInChildren<TextMeshProUGUI>();
 
             buttonText.text = levelName;
-            button.onClick.AddListener(() => { AuthenticatedSceneManager.LoadScene(levelSceneName); });
+            button.onClick.AddListener(() => { LevelManager.LoadLevel(levelSceneName); });
         }
     }
 }
