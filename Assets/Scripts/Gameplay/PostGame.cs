@@ -18,7 +18,7 @@ namespace Platformer.Gameplay {
 
             postGameUI.gameObject.SetActive(true);
             postGameUI.RefreshUI();
-            postGameCoinCount.text = model.coinCount.ToString();
+            postGameCoinCount.text = model.player.Coins.ToString();
         }
     }
 }

@@ -38,10 +38,10 @@ namespace Platformer.Model {
         /// </summary>
         public float jumpDeceleration = 0.5f;
 
-        /// <summary>
-        /// The coins earned in a level.
-        /// </summary>
-        public int coinCount = 0;
+        // /// <summary>
+        // /// The coins earned in a level.
+        // /// </summary>
+        // public int coinCount = 0;
 
         /// <summary>
         /// The post game UI for accepting the coins earned as ERC20 tokens.

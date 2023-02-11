@@ -30,9 +30,7 @@ namespace Platformer.Gameplay {
 
                 player.animator.SetTrigger("hurt");
                 player.animator.SetBool("dead", true);
-
-                // TODO: Show death screen instead and spawn player after the player has claimed their coins
-                model.coinCount = player.Coins;
+                
                 Simulation.Schedule<PostGame>(2);
             }
         }
