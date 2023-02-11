@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Platformer.Scene {
     /// <summary>
@@ -8,7 +7,9 @@ namespace Platformer.Scene {
     /// </summary>
     [CreateAssetMenu(fileName = "LevelConfig", menuName = "ScriptableObjects/LevelConfig", order = 1)]
     public class LevelConfig : ScriptableObject {
-        public List<string> levelSceneNames;
+        public List<string> LevelSceneNames => levelSceneNames;
+
+        [SerializeField] private List<string> levelSceneNames;
 
         public string GetLevelSceneName(int levelIndex) {
             return levelSceneNames[levelIndex];

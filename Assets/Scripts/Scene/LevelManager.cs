@@ -13,9 +13,7 @@ namespace Platformer.Scene {
         public static string CurrentLevelSceneName { get; private set; }
         public static bool IsLastLevel { get; private set; }
 
-        public static List<string> LevelSceneNames {
-            get { return _instance.levelConfig.levelSceneNames; }
-        }
+        public static List<string> LevelSceneNames => _instance.levelConfig.LevelSceneNames;
 
         [SerializeField] private LevelConfig levelConfig;
 

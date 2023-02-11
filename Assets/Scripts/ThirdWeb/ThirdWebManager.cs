@@ -64,10 +64,15 @@ namespace Platformer.ThirdWeb {
             return result.isSuccessful();
         }
 
-        // TODO: This needs to be changed to check if the user owns any character
+        // TODO: This needs to be changed to check if the user owns a particular character
         public static async Task<bool> IsCharacterOwner() {
             var owned = await _instance._characterContract.ERC1155.GetOwned(ConnectedAddress);
             return owned.Count > 0;
+        }
+
+        public static async Task<string> GetCoinBalance() {
+            var balance = await _instance._coinContract.ERC20.Balance();
+            return balance.displayValue;
         }
 
         #endregion
