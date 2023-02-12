@@ -13,6 +13,7 @@ namespace Platformer.Scene {
     /// </summary>
     public class StartManager : MonoBehaviour {
         [SerializeField] private GameObject startCanvas;
+        [SerializeField] private GameObject coinCount;
         [SerializeField] private TextMeshProUGUI coinCountText;
         [SerializeField] private Button playButton;
         [SerializeField] private Button characterSelectButton;
@@ -20,8 +21,6 @@ namespace Platformer.Scene {
         private bool _hasToBeReloaded = true;
 
         private void Start() {
-            
-            
 #if UNITY_EDITOR
             playButton.onClick.AddListener(() => { AuthenticatedSceneManager.LoadScene("LevelSelect"); });
 
@@ -44,7 +43,11 @@ namespace Platformer.Scene {
         }
 
         private async void UpdateCoinBalance() {
+            coinCount.SetActive(false);
+
             coinCountText.text = await ThirdWebManager.GetCoinBalance();
+
+            coinCount.SetActive(true);
             _hasToBeReloaded = false;
         }
 

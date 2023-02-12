@@ -865,6 +865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startCanvas: {fileID: 432048691}
+  coinCount: {fileID: 1242550113}
   coinCountText: {fileID: 419782060}
   playButton: {fileID: 425069911}
   characterSelectButton: {fileID: 295679161}
