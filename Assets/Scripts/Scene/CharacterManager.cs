@@ -10,7 +10,10 @@ namespace Platformer.Scene {
     public class CharacterManager : MonoBehaviour {
         public static GameObject CurrentCharacterPrefab { get; private set; }
 
-        public static List<Tuple<GameObject, Sprite>> Characters => _instance.characterConfig.characters;
+        public static Tuple<GameObject, Sprite, int, int> AirdropCharacter =>
+            _instance.characterConfig.AirdropCharacter;
+
+        public static List<Tuple<GameObject, Sprite, int, int>> Characters => _instance.characterConfig.Characters;
 
         [SerializeField] private CharacterConfig characterConfig;
 
@@ -33,7 +36,7 @@ namespace Platformer.Scene {
         }
 
         private void Start() {
-            CurrentCharacterPrefab = characterConfig.characters[0].Item1;
+            CurrentCharacterPrefab = characterConfig.AirdropCharacter.Item1;
         }
     }
 }

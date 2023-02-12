@@ -12,7 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ae80db21613c54aa10f67b7bda5ff2, type: 3}
   m_Name: CharacterConfig
   m_EditorClassIdentifier: 
+  characterCollectionAddress: 0xCbB8Fe0933c74D7EDC4B19000F44278c41cF56Ad
+  airdropCharacterPrefab: {fileID: 1208144871472054, guid: 7d60c822c3f1b408ea7a00ecdb5e047a,
+    type: 3}
+  airdropCharacterSprite: {fileID: 21300000, guid: 58b9e6ae82e96da47aee0a40959b5114,
+    type: 3}
+  airdropCharacterId: 0
   characterPrefabs:
-  - {fileID: 1208144871472054, guid: 7d60c822c3f1b408ea7a00ecdb5e047a, type: 3}
+  - {fileID: 1208144871472054, guid: e7e96e0eb13cce546b367823f3f35f8a, type: 3}
+  - {fileID: 1208144871472054, guid: b9a08d676c9e3bb44a788f411e92692f, type: 3}
+  - {fileID: 1208144871472054, guid: a5665f559306b0245af7f9d792e8b4a3, type: 3}
   characterSprites:
-  - {fileID: 21300000, guid: baf6989932e28f14ba7fa91247759bfb, type: 3}
+  - {fileID: 21300000, guid: 705234186437eb54a9c90f53c6f45244, type: 3}
+  - {fileID: 21300000, guid: ebb1171bc3e48d54ba3dca2a90219281, type: 3}
+  - {fileID: 21300000, guid: 6971ebe0ebb37fc419e6230231bd0ece, type: 3}
+  characterCosts: 320000006400000096000000
+  characterIds: 020000000300000004000000

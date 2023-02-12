@@ -1,8 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using Platformer.Scene;
 using UnityEngine;
 using Thirdweb;
 using TMPro;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Platformer.ThirdWeb {
@@ -33,6 +35,7 @@ namespace Platformer.ThirdWeb {
         private string _connectedAddress;
         private Contract _coinContract;
         private Contract _characterContract;
+        private float _coinBalance;
 
         #endregion
 
@@ -59,20 +62,62 @@ namespace Platformer.ThirdWeb {
             return result.isSuccessful();
         }
 
-        public static async Task<bool> GetCharacter() {
+        public static async Task<bool> GetAirdropCharacter() {
             TransactionResult result = await _instance._characterContract.ERC1155.Claim("0", 1);
             return result.isSuccessful();
         }
 
-        // TODO: This needs to be changed to check if the user owns a particular character
-        public static async Task<bool> IsCharacterOwner() {
-            var owned = await _instance._characterContract.ERC1155.GetOwned(ConnectedAddress);
-            return owned.Count > 0;
+        public static async Task<bool> BuyCharacter(int characterId) {
+            TransactionResult result = await _instance._characterContract.ERC1155.Claim(characterId.ToString(), 1);
+            return result.isSuccessful();
         }
 
-        public static async Task<string> GetCoinBalance() {
+        public static async Task<bool> IsAirdropCharacterOwner() {
+#if !UNITY_EDITOR
+            var owned = await _instance._characterContract.ERC1155.GetOwned(ConnectedAddress);
+
+            // TODO: use index from character manager
+            int airdropCharacterId = CharacterManager.AirdropCharacter.Item4;
+            if (owned.Count > 0) {
+                foreach (var item in owned) {
+                    if (item.metadata.id == airdropCharacterId.ToString()) {
+                        return item.quantityOwned > 0;
+                    }
+                }
+            }
+
+#else
+            return true;
+#endif
+
+            return false;
+        }
+
+        public static async Task<bool> IsCharacterOwner(int characterId) {
+#if !UNITY_EDITOR
+            var owned = await _instance._characterContract.ERC1155.GetOwned(ConnectedAddress);
+
+            if (owned.Count > 0) {
+                foreach (var item in owned) {
+                    if (item.metadata.id == characterId.ToString()) {
+                        return item.quantityOwned > 0;
+                    }
+                }
+            }
+#else
+            return true;
+#endif
+
+            return false;
+        }
+
+        public static float GetCoinBalance() {
+            return _instance._coinBalance;
+        }
+
+        public static async Task RefreshData() {
             var balance = await _instance._coinContract.ERC20.Balance();
-            return balance.displayValue;
+            _instance._coinBalance = float.Parse(balance.displayValue);
         }
 
         #endregion
@@ -122,18 +167,6 @@ namespace Platformer.ThirdWeb {
                 authStatusText.text = $"Connected as {address}";
                 _isAuthenticated = true;
                 _connectedAddress = address;
-
-                // if (await IsCharacterOwner()) {
-                //     Debug.Log("Already owns character");
-                // }
-                // else {
-                //     if (await GetCharacter()) {
-                //         Debug.Log("Got character");
-                //     }
-                //     else {
-                //         Debug.Log("Error getting character");
-                //     }
-                // }
             }
             catch (System.Exception e) {
                 authStatusText.text = $"Error: {e.Message}";

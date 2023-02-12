@@ -6,6 +6,7 @@ using static Platformer.Core.Simulation;
 using Platformer.Model;
 using Platformer.Core;
 using TMPro;
+using UnityEngine.Serialization;
 
 namespace Platformer.Mechanics {
     /// <summary>
@@ -52,16 +53,20 @@ namespace Platformer.Mechanics {
 
         public Bounds Bounds => collider2d.bounds;
 
-        [SerializeField] private TextMeshProUGUI coinCountText;
+        private TextMeshProUGUI _coinCountText;
+
+        public void SetCoinCountText(TextMeshProUGUI coinCountText) {
+            _coinCountText = coinCountText;
+        }
 
         public void IncrementCoins() {
             Coins++;
-            coinCountText.text = Coins.ToString();
+            _coinCountText.text = Coins.ToString();
         }
 
         public void ResetCoins() {
             Coins = 0;
-            coinCountText.text = Coins.ToString();
+            _coinCountText.text = Coins.ToString();
         }
 
         private void Awake() {
@@ -72,7 +77,7 @@ namespace Platformer.Mechanics {
             animator = GetComponent<Animator>();
 
             // Initialize the coin count text.
-            coinCountText.text = Coins.ToString();
+            // _coinCountText.text = Coins.ToString();
         }
 
         protected override void Update() {

@@ -22,7 +22,7 @@ namespace Platformer.Scene {
         private async void Start() {
             // TODO: Deal with warning about async lambda.
             getCharacterButton.onClick.AddListener(async () => {
-                bool ownsCharacter = await ThirdWebManager.GetCharacter();
+                bool ownsCharacter = await ThirdWebManager.GetAirdropCharacter();
                 if (ownsCharacter) {
                     getCharacterPanel.SetActive(false);
                 }
@@ -31,25 +31,36 @@ namespace Platformer.Scene {
             doneButton.onClick.AddListener(() => { AuthenticatedSceneManager.LoadScene("Start"); });
 
             // TODO: Using await in the if statement below blocks the game. Use a waiting screen until the result is known.
-#if !UNITY_EDITOR
-            if (await ThirdWebManager.IsCharacterOwner()) {
-                Debug.Log("You own the basic character.");
+            bool isAirdropCharacterOwner = await ThirdWebManager.IsAirdropCharacterOwner();
+
+            if (isAirdropCharacterOwner) {
+                Debug.Log("You own the airdrop character.");
                 getCharacterPanel.SetActive(false);
-            } else {
+            }
+            else {
                 getCharacterPanel.SetActive(true);
             }
-#endif
 
             var selectableCharacters = new List<SelectableCharacter>();
-            foreach (Tuple<GameObject, Sprite> character in CharacterManager.Characters) {
+
+            // AirDrop Character.
+            GameObject selectableAirdropCharacter =
+                Instantiate(selectableCharacterPrefab, characterSelectGrid.transform);
+            // Airdrop character is set to owned no matter what.
+            selectableAirdropCharacter.GetComponent<SelectableCharacter>().SetCharacter(
+                CharacterManager.AirdropCharacter.Item1,
+                CharacterManager.AirdropCharacter.Item2, 0, 0, true);
+            selectableCharacters.Add(selectableAirdropCharacter.GetComponent<SelectableCharacter>());
+
+            // Characters that can be bought.
+            foreach (Tuple<GameObject, Sprite, int, int> character in CharacterManager.Characters) {
                 GameObject selectableCharacter = Instantiate(selectableCharacterPrefab, characterSelectGrid.transform);
-                selectableCharacter.GetComponent<SelectableCharacter>().SetCharacter(character.Item1, character.Item2);
+                bool isOwned = await ThirdWebManager.IsCharacterOwner(character.Item4);
+                selectableCharacter.GetComponent<SelectableCharacter>().SetCharacter(character.Item1, character.Item2,
+                    character.Item3, character.Item4, isOwned);
                 selectableCharacters.Add(selectableCharacter.GetComponent<SelectableCharacter>());
             }
 
-
-            // var selectableCharacters = characterSelectGrid.GetComponentsInChildren<SelectableCharacter>();
-            // selectableCharacters[0].SelectCharacter();
             foreach (SelectableCharacter selectableCharacter in selectableCharacters) {
                 if (selectableCharacter.CharacterPrefab == CharacterManager.CurrentCharacterPrefab) {
                     selectableCharacter.SelectCharacter();
@@ -57,9 +68,11 @@ namespace Platformer.Scene {
 
                 // For deselecting all other characters when a character is selected.
                 selectableCharacter.AddListener(() => {
-                    foreach (var otherSelectableCharacter in selectableCharacters) {
-                        if (otherSelectableCharacter != selectableCharacter) {
-                            otherSelectableCharacter.DeselectCharacter();
+                    if (selectableCharacter.IsOwned) {
+                        foreach (var otherSelectableCharacter in selectableCharacters) {
+                            if (otherSelectableCharacter != selectableCharacter) {
+                                otherSelectableCharacter.DeselectCharacter();
+                            }
                         }
                     }
                 });

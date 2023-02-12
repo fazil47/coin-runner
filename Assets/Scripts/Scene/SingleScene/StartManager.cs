@@ -45,7 +45,8 @@ namespace Platformer.Scene {
         private async void UpdateCoinBalance() {
             coinCount.SetActive(false);
 
-            coinCountText.text = await ThirdWebManager.GetCoinBalance();
+            await ThirdWebManager.RefreshData();
+            coinCountText.text = ThirdWebManager.GetCoinBalance().ToString();
 
             coinCount.SetActive(true);
             _hasToBeReloaded = false;

@@ -24,7 +24,7 @@ namespace Platformer.UI {
             InitializeUI();
         }
 
-        private void Start() {
+        public void InitializePostGameUIController() {
             postGameUI.SetActive(false);
 
             InitializeUI();
