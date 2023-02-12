@@ -16,6 +16,7 @@ namespace Platformer.UI {
         [SerializeField] private Image displayImage;
         [SerializeField] private TextMeshProUGUI selectedStatusText;
 
+        // TODO: Maybe delete this
         private bool _isSelected = false;
 
         public void SetCharacter(GameObject characterPrefab, Sprite sprite) {
