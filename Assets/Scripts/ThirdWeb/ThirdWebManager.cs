@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Platformer.Scene;
 using UnityEngine;
 using Thirdweb;
 using TMPro;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Platformer.ThirdWeb {
@@ -36,6 +36,7 @@ namespace Platformer.ThirdWeb {
         private Contract _coinContract;
         private Contract _characterContract;
         private float _coinBalance;
+        private static Dictionary<int, bool> _characterOwnership;
 
         #endregion
 
@@ -44,6 +45,8 @@ namespace Platformer.ThirdWeb {
         public static bool IsAuthenticated => _instance._isAuthenticated;
 
         public static string ConnectedAddress => _instance._connectedAddress;
+
+        public static bool ShouldDataBeRefreshed { get; set; }
 
         #endregion
 
@@ -57,58 +60,57 @@ namespace Platformer.ThirdWeb {
             _instance.authPanelCanvas.SetActive(false);
         }
 
-        public static async Task<bool> GetCoin(string amount) {
+        public static async Task<bool> ClaimCoin(string amount) {
             TransactionResult result = await _instance._coinContract.ERC20.Claim(amount);
-            return result.isSuccessful();
+            if (result.isSuccessful()) {
+                _instance._coinBalance += float.Parse(amount);
+                return true;
+            }
+
+            return false;
         }
 
-        public static async Task<bool> GetAirdropCharacter() {
+        public static async Task<bool> ClaimAirdropCharacter() {
             TransactionResult result = await _instance._characterContract.ERC1155.Claim("0", 1);
-            return result.isSuccessful();
+            if (result.isSuccessful()) {
+                _characterOwnership[CharacterManager.AirdropCharacter.Item3] = true;
+                return true;
+            }
+
+            return false;
         }
 
         public static async Task<bool> BuyCharacter(int characterId) {
             TransactionResult result = await _instance._characterContract.ERC1155.Claim(characterId.ToString(), 1);
-            return result.isSuccessful();
-        }
-
-        public static async Task<bool> IsAirdropCharacterOwner() {
-#if !UNITY_EDITOR
-            var owned = await _instance._characterContract.ERC1155.GetOwned(ConnectedAddress);
-
-            // TODO: use index from character manager
-            int airdropCharacterId = CharacterManager.AirdropCharacter.Item4;
-            if (owned.Count > 0) {
-                foreach (var item in owned) {
-                    if (item.metadata.id == airdropCharacterId.ToString()) {
-                        return item.quantityOwned > 0;
-                    }
-                }
+            if (result.isSuccessful()) {
+                _characterOwnership[characterId] = true;
+                return true;
             }
-
-#else
-            return true;
-#endif
 
             return false;
         }
 
-        public static async Task<bool> IsCharacterOwner(int characterId) {
+        public static bool IsAirdropCharacterOwner() {
 #if !UNITY_EDITOR
-            var owned = await _instance._characterContract.ERC1155.GetOwned(ConnectedAddress);
-
-            if (owned.Count > 0) {
-                foreach (var item in owned) {
-                    if (item.metadata.id == characterId.ToString()) {
-                        return item.quantityOwned > 0;
-                    }
-                }
+            int airdropCharacterId = CharacterManager.AirdropCharacter.Item3;
+            if (_characterOwnership.ContainsKey(airdropCharacterId)) {
+                return _characterOwnership[airdropCharacterId];
             }
-#else
-            return true;
-#endif
 
             return false;
+#endif
+            return true;
+        }
+
+        public static bool IsCharacterOwner(int characterId) {
+#if !UNITY_EDITOR
+            if (_characterOwnership.ContainsKey(characterId)) {
+                return _characterOwnership[characterId];
+            }
+
+            return false;
+#endif
+            return true;
         }
 
         public static float GetCoinBalance() {
@@ -118,6 +120,11 @@ namespace Platformer.ThirdWeb {
         public static async Task RefreshData() {
             var balance = await _instance._coinContract.ERC20.Balance();
             _instance._coinBalance = float.Parse(balance.displayValue);
+
+            List<NFT> owned = await _instance._characterContract.ERC1155.GetOwned(ConnectedAddress);
+            foreach (NFT character in owned) {
+                _characterOwnership[int.Parse(character.metadata.id)] = character.quantityOwned > 0;
+            }
         }
 
         #endregion
@@ -129,9 +136,13 @@ namespace Platformer.ThirdWeb {
                 Destroy(this.gameObject);
             }
             else {
-#if !UNITY_EDITOR
                 _instance = this;
+                _coinBalance = 0;
+                _characterOwnership = new Dictionary<int, bool>();
+                ShouldDataBeRefreshed = true;
+                _isAuthenticated = false;
 
+#if !UNITY_EDITOR
                 // Initialize the ThirdWeb SDK and wallet connection event listeners
                 _sdk = new ThirdwebSDK("Mumbai");
                 _coinContract = _sdk.GetContract(coinContractAddress);
@@ -145,8 +156,6 @@ namespace Platformer.ThirdWeb {
                 DontDestroyOnLoad(authPanelCanvas);
 #endif
             }
-
-            _isAuthenticated = false;
         }
 
         private void InitializeAuthPanel() {

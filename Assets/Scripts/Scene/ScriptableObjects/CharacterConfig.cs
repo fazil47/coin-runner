@@ -9,10 +9,12 @@ namespace Platformer.Scene {
     /// </summary>
     [CreateAssetMenu(fileName = "CharacterConfig", menuName = "ScriptableObjects/CharacterConfig", order = 2)]
     public class CharacterConfig : ScriptableObject {
-        public Tuple<GameObject, Sprite, int, int> AirdropCharacter {
+        public Tuple<GameObject, Sprite, int> AirdropCharacter {
             get {
-                return new Tuple<GameObject, Sprite, int, int>(airdropCharacterPrefab, airdropCharacterSprite,
-                    0, airdropCharacterId);
+                return new Tuple<GameObject, Sprite, int>(
+                    airdropCharacterPrefab,
+                    airdropCharacterSprite,
+                    airdropCharacterId);
             }
         }
 

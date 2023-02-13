@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Platformer.Scene;
 using Platformer.ThirdWeb;
 using TMPro;
@@ -11,28 +8,31 @@ using UnityEngine.UI;
 namespace Platformer.UI {
     [RequireComponent(typeof(Button))]
     public class SelectableCharacter : MonoBehaviour {
-        public GameObject CharacterPrefab => characterPrefab;
+        public GameObject CharacterPrefab => _characterPrefab;
         public bool IsOwned => _isOwned;
 
-        [SerializeField] private GameObject characterPrefab;
         [SerializeField] private Image displayImage;
         [SerializeField] private GameObject selectedStatusPanel;
         [SerializeField] private TextMeshProUGUI selectedStatusText;
+        [SerializeField] private GameObject buyStatusPanel;
+        [SerializeField] private TextMeshProUGUI buyStatusText;
         [SerializeField] private GameObject costPanel;
         [SerializeField] private TextMeshProUGUI costText;
 
+        private GameObject _characterPrefab;
         private int _id;
-        private int _cost = 0;
-        private bool _isOwned = false;
-        private bool _isSelected = false; // TODO: Maybe delete this
+        private int _cost;
+
+        private bool _isOwned;
 
         public void SetCharacter(GameObject characterPrefab, Sprite sprite, int cost, int id, bool isOwned) {
-            this.characterPrefab = characterPrefab;
+            _characterPrefab = characterPrefab;
             displayImage.sprite = sprite;
             _cost = cost;
             _id = id;
             costText.text = cost.ToString();
             _isOwned = isOwned;
+
 
             if (_isOwned) {
                 costPanel.SetActive(false);
@@ -41,6 +41,10 @@ namespace Platformer.UI {
             else {
                 costPanel.SetActive(true);
                 selectedStatusPanel.SetActive(false);
+
+                if (_cost > ThirdWebManager.GetCoinBalance()) {
+                    GetComponent<Button>().interactable = false;
+                }
             }
         }
 
@@ -50,23 +54,26 @@ namespace Platformer.UI {
         }
 
         public void SelectCharacter() {
-            _isSelected = true;
             selectedStatusText.text = "Selected";
-            CharacterManager.SetCharacter(characterPrefab);
+            CharacterManager.SetCharacter(_characterPrefab);
         }
 
         public void DeselectCharacter() {
-            _isSelected = false;
             selectedStatusText.text = "Select";
         }
 
-        public async void BuyCharacter() {
+        private async void BuyCharacter() {
             if (!_isOwned) {
+                costPanel.SetActive(false);
+                buyStatusPanel.SetActive(true);
+                buyStatusText.text = "Buying...";
+
                 bool result = await ThirdWebManager.BuyCharacter(_id);
 
                 if (result) {
                     _isOwned = true;
                     costPanel.SetActive(false);
+                    buyStatusPanel.SetActive(false);
                     selectedStatusPanel.SetActive(true);
 
                     var button = GetComponent<Button>();
@@ -75,23 +82,27 @@ namespace Platformer.UI {
                 }
                 else {
                     Debug.Log("Failed to buy character");
+                    buyStatusText.text = "Failed";
                 }
             }
             else {
                 Debug.Log("Character already owned");
+                selectedStatusPanel.SetActive(true);
+                buyStatusPanel.SetActive(false);
+                costPanel.SetActive(false);
             }
         }
 
         private void Start() {
+            buyStatusPanel.SetActive(false);
+
             var button = GetComponent<Button>();
-            button.onClick.AddListener(() => {
-                if (_isOwned) {
-                    SelectCharacter();
-                }
-                else {
-                    BuyCharacter();
-                }
-            });
+            if (_isOwned) {
+                button.onClick.AddListener(SelectCharacter);
+            }
+            else {
+                button.onClick.AddListener(BuyCharacter);
+            }
         }
     }
 }

@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Platformer.ThirdWeb;
 using TMPro;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Platformer.Scene {
@@ -13,12 +10,11 @@ namespace Platformer.Scene {
     /// </summary>
     public class StartManager : MonoBehaviour {
         [SerializeField] private GameObject startCanvas;
+        [SerializeField] private GameObject loadingCanvas;
         [SerializeField] private GameObject coinCount;
         [SerializeField] private TextMeshProUGUI coinCountText;
         [SerializeField] private Button playButton;
         [SerializeField] private Button characterSelectButton;
-
-        private bool _hasToBeReloaded = true;
 
         private void Start() {
 #if UNITY_EDITOR
@@ -42,30 +38,38 @@ namespace Platformer.Scene {
 #endif
         }
 
-        private async void UpdateCoinBalance() {
-            coinCount.SetActive(false);
-
-            await ThirdWebManager.RefreshData();
+        private void UpdateCoinBalance() {
             coinCountText.text = ThirdWebManager.GetCoinBalance().ToString();
-
             coinCount.SetActive(true);
-            _hasToBeReloaded = false;
         }
 
-        private void Update() {
+        private async Task UpdateData() {
+            ThirdWebManager.HideAuthPanel();
+            loadingCanvas.SetActive(true);
+
+            await ThirdWebManager.RefreshData();
+
+            UpdateCoinBalance();
+
+            loadingCanvas.SetActive(false);
+            startCanvas.SetActive(true);
+        }
+
+        private async void Update() {
 #if UNITY_EDITOR
             startCanvas.SetActive(true);
+            loadingCanvas.SetActive(false);
 #else
-            if (ThirdWebManager.IsAuthenticated) {
-                if (_hasToBeReloaded) {
-                    UpdateCoinBalance();
+            if (ThirdWebManager.ShouldDataBeRefreshed) {
+                if (ThirdWebManager.IsAuthenticated) {
+                    await UpdateData();
+                    ThirdWebManager.ShouldDataBeRefreshed = false;
                 }
-                ThirdWebManager.HideAuthPanel();
-                startCanvas.SetActive(true);
-            }
-            else {
-                startCanvas.SetActive(false);
-                ThirdWebManager.ShowAuthPanel();
+                else {
+                    startCanvas.SetActive(false);
+                    loadingCanvas.SetActive(false);
+                    ThirdWebManager.ShowAuthPanel();
+                }
             }
 #endif
         }

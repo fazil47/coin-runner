@@ -1,9 +1,7 @@
 using Platformer.Core;
-using Platformer.Mechanics;
 using Platformer.Model;
 using Platformer.UI;
 using TMPro;
-using UnityEngine;
 
 namespace Platformer.Gameplay {
     /// <summary>

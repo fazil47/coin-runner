@@ -1,5 +1,4 @@
 using Platformer.Core;
-using Platformer.Gameplay;
 using Platformer.Scene;
 using Platformer.Mechanics;
 using Platformer.Model;
@@ -60,7 +59,10 @@ namespace Platformer.UI {
                 player.ResetCoins();
             });
 
-            menuButton.onClick.AddListener(() => { AuthenticatedSceneManager.LoadScene("Start"); });
+            menuButton.onClick.AddListener(() => {
+                ThirdWebManager.ShouldDataBeRefreshed = true;
+                AuthenticatedSceneManager.LoadScene("Start");
+            });
 
             replayButton.onClick.AddListener(() => {
                 InitializeUI();
@@ -98,7 +100,7 @@ namespace Platformer.UI {
         }
 
         private async Task<bool> GetCoin(string coinCount) {
-            return await ThirdWebManager.GetCoin(coinCount);
+            return await ThirdWebManager.ClaimCoin(coinCount);
         }
     }
 }

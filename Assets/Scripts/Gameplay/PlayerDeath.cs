@@ -15,7 +15,7 @@ namespace Platformer.Gameplay {
     public class PlayerDeath : Simulation.Event<PlayerDeath> {
         PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
-        public override async void Execute() {
+        public override void Execute() {
             PlayerController player = model.player;
             if (player.health.IsAlive) {
                 player.health.Die();

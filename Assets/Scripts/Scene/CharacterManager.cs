@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace Platformer.Scene {
     public class CharacterManager : MonoBehaviour {
         public static GameObject CurrentCharacterPrefab { get; private set; }
 
-        public static Tuple<GameObject, Sprite, int, int> AirdropCharacter =>
+        public static Tuple<GameObject, Sprite, int> AirdropCharacter =>
             _instance.characterConfig.AirdropCharacter;
 
         public static List<Tuple<GameObject, Sprite, int, int>> Characters => _instance.characterConfig.Characters;
