@@ -36,11 +36,12 @@ namespace Platformer.Scene {
                 }
             });
 #endif
+
+            UpdateCoinBalance();
         }
 
         private void UpdateCoinBalance() {
             coinCountText.text = ThirdWebManager.GetCoinBalance().ToString();
-            coinCount.SetActive(true);
         }
 
         private async Task UpdateData() {
