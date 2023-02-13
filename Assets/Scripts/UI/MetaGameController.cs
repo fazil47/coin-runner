@@ -65,7 +65,8 @@ namespace Platformer.UI
         {
             if (Input.GetButtonDown("Menu"))
             {
-                ToggleMainMenu(show: !showMainCanvas);
+                // TODO: This should be uncommented when pause menu is ready.
+                // ToggleMainMenu(show: !showMainCanvas);
             }
         }
 
