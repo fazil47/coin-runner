@@ -137,7 +137,6 @@ namespace Platformer.ThirdWeb {
             }
             else {
                 _instance = this;
-                _coinBalance = 0;
                 _characterOwnership = new Dictionary<int, bool>();
                 ShouldDataBeRefreshed = true;
                 _isAuthenticated = false;
