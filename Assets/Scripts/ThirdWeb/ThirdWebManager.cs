@@ -5,6 +5,7 @@ using Platformer.Scene;
 using UnityEngine;
 using Thirdweb;
 using TMPro;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Platformer.ThirdWeb {
@@ -24,7 +25,8 @@ namespace Platformer.ThirdWeb {
         [SerializeField] private String characterContractAddress;
         [SerializeField] private GameObject authPanelCanvas;
         [SerializeField] private TextMeshProUGUI authStatusText;
-        [SerializeField] private Button authButton;
+        [SerializeField] private Button metaMaskAuthButton;
+        [SerializeField] private Button coinbaseAuthButton;
 
         #endregion
 
@@ -159,12 +161,14 @@ namespace Platformer.ThirdWeb {
 
         private void InitializeAuthPanel() {
             authStatusText.text = "Connect Wallet";
-            authButton.onClick.AddListener(() => { ConnectWallet(WalletProvider.MetaMask); });
+            metaMaskAuthButton.onClick.AddListener(() => { ConnectWallet(WalletProvider.MetaMask); });
+            coinbaseAuthButton.onClick.AddListener(() => { ConnectWallet(WalletProvider.CoinbaseWallet); });
         }
 
         private async void ConnectWallet(WalletProvider provider) {
             authStatusText.text = "Authenticating...";
-            authButton.interactable = false;
+            metaMaskAuthButton.interactable = false;
+            coinbaseAuthButton.interactable = false;
 
             try {
                 string address = await _sdk.wallet.Connect(new WalletConnection() {
