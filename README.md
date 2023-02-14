@@ -17,3 +17,4 @@ CoinRunner is a 2D platformer game that uses NFTs for characters and ERC20 token
 
 ## Breakdown
 
+This project was made with a 2D platformer template from Unity and it uses Third Web's Unity SDK to connect to Polygon. The in-game currency is an ERC20 token and the characters are ERC1155 NFTs which can be bought using the in-game currency.
