@@ -11,3 +11,6 @@ CoinRunner is a 2D platformer game that uses NFTs for characters and ERC20 token
 
 ## Installation Instructions
 
+1. Install Unity Hub
+2. Install Unity `2021.3.16f1` from the [Unity archive](https://unity.com/releases/editor/archive) and add to Unity Hub.
+3. Open project with Unity Hub
